@@ -1,5 +1,15 @@
 version: '3.8'
 services:
+  app: 
+    build: .
+    container_name: app
+    restart: always
+    volumes:
+      - ./src:/app/src
+    ports:
+      - 3000:3000
+    depends_on:
+      - db
   db:
     image: postgres:13
     container_name: db
