@@ -1,7 +1,6 @@
 import { Strategy, ExtractJwt, StrategyOptions, VerifiedCallback } from 'passport-jwt';
 import config from '../config/config';
 import { prisma } from '../database/prisma';
-import { Unauthorized } from 'http-errors';
 import { IUserRequest } from '../interfaces/auth/user';
 import { Request } from 'express';
 import { getRedisClient } from '../database/redis';
@@ -19,7 +18,7 @@ export const verifyToken = new Strategy(opts, async (req: Request, payload: IUse
         },
     });
 
-    if (!user) throw new Unauthorized('unauthorized');
+    if (!user) return done(null, false);
 
     const redisClient = await getRedisClient();
     const TokenExistsOnBlackList = await redisClient.get(`bl_${req.headers.authorization}`);

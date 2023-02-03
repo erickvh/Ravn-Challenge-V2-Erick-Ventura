@@ -4,7 +4,8 @@
         "lint": "eslint src/**/*.ts",
         "format": "eslint src/**/*.ts --fix",
         "build": "tsc",
-        "test": "jest --watchAll"
+        "test:verbose": "jest  --verbose --coverage",
+        "test": "jest --verbose=false --coverage"
     },
     "husky": {
         "hooks": {
@@ -21,6 +22,7 @@
         "@types/node": "^18.11.18",
         "@types/passport": "^1.0.11",
         "@types/passport-jwt": "^3.0.8",
+        "@types/supertest": "^2.0.12",
         "@typescript-eslint/eslint-plugin": "^5.50.0",
         "@typescript-eslint/parser": "^5.50.0",
         "eslint": "^8.33.0",

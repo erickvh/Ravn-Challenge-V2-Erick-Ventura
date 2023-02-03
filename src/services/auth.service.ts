@@ -47,7 +47,7 @@ export class AuthService {
 
         const isPasswordValid = await compare(user.password, userFound.password);
 
-        if (!isPasswordValid) throw new Unauthorized('Invalid password');
+        if (!isPasswordValid) throw Unauthorized('Invalid password');
 
         return this.createToken(userFound);
     }
@@ -68,7 +68,7 @@ export class AuthService {
     }
 
     static async logOut(token: string | undefined) {
-        if (!token) throw new Unauthorized('Token not found');
+        if (!token) throw Unauthorized('Token not found');
         const clientRedis = await getRedisClient();
         const tokenKey = `bl_${token}`;
         await clientRedis.set(tokenKey, token);

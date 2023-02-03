@@ -11,7 +11,7 @@ export class UserFactory {
     }
 
     async make(): Promise<User> {
-        return this.prismaClient.user.create({
+        const user = await this.prismaClient.user.create({
             data: {
                 name: faker.name.fullName(),
                 email: faker.internet.email(),
@@ -23,10 +23,11 @@ export class UserFactory {
                 },
             },
         });
+        return user;
     }
 
     async makeUsingData(data: IUserRequest): Promise<User> {
-        return this.prismaClient.user.create({
+        const user = await this.prismaClient.user.create({
             data: {
                 name: data.name,
                 email: data.email,
@@ -38,6 +39,8 @@ export class UserFactory {
                 },
             },
         });
+
+        return user;
     }
 
     async makeMany(qty: number): Promise<User[]> {
