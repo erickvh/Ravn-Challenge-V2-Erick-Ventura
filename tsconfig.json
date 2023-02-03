@@ -1,12 +1,13 @@
 {
-  "compilerOptions": {
-    "target": "es2018",
-    "module": "commonjs",
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "outDir": "./dist",
-    "skipLibCheck": true,
-    "removeComments": true
-  }
+    "compilerOptions": {
+        "target": "es2018",
+        "module": "commonjs",
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "strict": true,
+        "outDir": "./dist",
+        "skipLibCheck": true,
+        "removeComments": true,
+        "experimentalDecorators": true
+    }
 }

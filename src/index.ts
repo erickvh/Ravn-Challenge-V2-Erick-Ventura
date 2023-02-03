@@ -1,12 +1,15 @@
+import 'express-async-errors';
 import express from 'express';
-import { hello } from './controllers/main';
 import { config } from 'dotenv';
-const app = express();
+import { indexRoutes } from './routes/index.route';
+import { errorHandler } from './middlewares/errorHandler';
 
 config();
 
-app.get('/', hello);
-
+const app = express();
+app.use(express.json());
+app.use(indexRoutes(app));
+app.use(errorHandler);
 app.listen(process.env.PORT, () => {
     console.log(`App listening on port ${process.env.PORT}`);
 });
