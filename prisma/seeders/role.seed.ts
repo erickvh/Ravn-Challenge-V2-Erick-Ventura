@@ -1,17 +1,21 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Role } from '@prisma/client';
 
-export async function roleSeed(prisma: PrismaClient) {
-    const roles = ['client', 'admin'];
+export async function roleSeed(prisma: PrismaClient): Promise<Role[]> {
+    const roles = ['client', 'manager'];
 
-    return roles.map(async (role) => {
-        await prisma.role.upsert({
-            create: {
-                name: role,
-            },
-            update: {},
-            where: {
-                name: role,
-            },
-        });
-    });
+    return Promise.all(
+        roles.map((role) => {
+            return prisma.role.upsert({
+                create: {
+                    name: role,
+                },
+                update: {
+                    name: role,
+                },
+                where: {
+                    name: role,
+                },
+            });
+        }),
+    );
 }

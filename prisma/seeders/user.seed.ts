@@ -1,49 +1,64 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, User } from '@prisma/client';
+import { hash } from 'bcryptjs';
 
-export async function userSeed(prisma: PrismaClient) {
+export async function userSeed(prisma: PrismaClient): Promise<User[]> {
+    const adminPassword = await hash('admin', 10);
+    const clientPassword = await hash('secret123', 10);
+
     const users = [
         {
             email: 'admin@booky.com',
-            password: 'admin',
+            password: adminPassword,
             name: 'Jane doe',
-            role: 'admin',
+            role: 'manager',
         },
         {
             email: 'manager@booky.com',
-            password: 'admin',
+            password: adminPassword,
             name: 'Jonh Doe',
-            role: 'admin',
+            role: 'manager',
         },
         {
             email: 'customer@test.com',
-            password: 'secret123',
+            password: clientPassword,
             name: 'Erick Ventura',
             role: 'client',
         },
         {
             email: 'customer2@test.com',
-            password: 'secret123',
+            password: clientPassword,
             name: 'Antonio Hurtado',
             role: 'client',
         },
     ];
 
-    return users.map(async (user) => {
-        await prisma.user.upsert({
-            create: {
-                email: user.email,
-                password: user.password,
-                name: user.name,
-                role: {
-                    connect: {
-                        name: user.role,
+    return Promise.all(
+        users.map((user) => {
+            return prisma.user.upsert({
+                create: {
+                    email: user.email,
+                    password: user.password,
+                    name: user.name,
+                    role: {
+                        connect: {
+                            name: user.role,
+                        },
                     },
                 },
-            },
-            update: {},
-            where: {
-                email: user.email,
-            },
-        });
-    });
+                update: {
+                    email: user.email,
+                    password: user.password,
+                    name: user.name,
+                    role: {
+                        connect: {
+                            name: user.role,
+                        },
+                    },
+                },
+                where: {
+                    email: user.email,
+                },
+            });
+        }),
+    );
 }

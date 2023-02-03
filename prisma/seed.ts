@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
-import { userSeed } from './seeders/user.seed';
 import { roleSeed } from './seeders/role.seed';
+import { userSeed } from './seeders/user.seed';
 
 const prisma = new PrismaClient();
 
