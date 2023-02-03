@@ -1,11 +1,11 @@
-import express from 'express';
-import { hello } from './controllers/main';
+import 'express-async-errors';
+
 import { config } from 'dotenv';
-const app = express();
+import { appBuilder } from './app';
 
 config();
 
-app.get('/', hello);
+const app = appBuilder();
 
 app.listen(process.env.PORT, () => {
     console.log(`App listening on port ${process.env.PORT}`);
