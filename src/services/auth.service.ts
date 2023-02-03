@@ -52,7 +52,7 @@ export class AuthService {
         return this.createToken(userFound);
     }
 
-    static async createToken(user: IUserRequest) {
+    static async createToken(user: IUserRequest): Promise<string> {
         const token = sign(
             {
                 id: user.id,
@@ -72,5 +72,7 @@ export class AuthService {
         const clientRedis = await getRedisClient();
         const tokenKey = `bl_${token}`;
         await clientRedis.set(tokenKey, token);
+
+        return true;
     }
 }

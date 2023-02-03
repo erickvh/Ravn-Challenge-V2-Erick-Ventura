@@ -14,8 +14,7 @@ export class AuthController {
     }
 
     static async logOut(req: Request, res: Response) {
-        await AuthService.logOut(req.headers.authorization);
-
-        res.status(200).json({ message: 'User has been logged out' });
+        if (await AuthService.logOut(req.headers.authorization))
+            res.status(200).json({ message: 'User has been logged out' });
     }
 }

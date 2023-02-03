@@ -8,6 +8,9 @@
         "outDir": "./dist",
         "skipLibCheck": true,
         "removeComments": true,
-        "experimentalDecorators": true
+        "experimentalDecorators": true,
+        "sourceMap": true,
+        "moduleResolution": "node",
+        "allowSyntheticDefaultImports": true
     }
 }
