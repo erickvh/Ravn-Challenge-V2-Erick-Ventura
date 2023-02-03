@@ -1,11 +1,12 @@
 import express from 'express';
-import { Request, Response } from 'express';
+import { hello } from './controllers/main';
+import { config } from 'dotenv';
 const app = express();
 
-app.get('/', (req: Request, res: Response) => {
-    res.send('Hello World! !');
-});
+config();
 
-app.listen(3000, () => {
-    console.log('Server started on port 3000');
+app.get('/', hello);
+
+app.listen(process.env.PORT, () => {
+    console.log(`App listening on port ${process.env.PORT}`);
 });
