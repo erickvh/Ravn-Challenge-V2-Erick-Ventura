@@ -18,7 +18,7 @@ export class CartService {
         }
     }
 
-    static async addToCart(userId: number, productId: number, qty: number = 1): Promise<void> {
+    static async addToCart(userId: number, productId: number, qty: number = 1): Promise<boolean> {
         await this.validateProduct(productId, qty);
         // Find the cart for the user
         let cart = await prisma.cart.findFirst({
@@ -55,5 +55,7 @@ export class CartService {
                 },
             },
         });
+
+        return true;
     }
 }
