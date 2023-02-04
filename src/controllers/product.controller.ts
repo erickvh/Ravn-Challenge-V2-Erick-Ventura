@@ -4,7 +4,9 @@ import { IProductRequest } from '../interfaces/product/product';
 
 export class ProductController {
     static async index(req: Request, res: Response) {
-        const products = await ProductService.getAll('', 1, 10);
+        let { q, page, limit } = req.query;
+
+        const products = await ProductService.getAll(q as string, page as string, limit as string);
 
         return res.status(200).json({ products });
     }

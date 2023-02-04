@@ -1,38 +1,42 @@
 import { prisma } from '../database/prisma';
 import { IProductRequest, IProductResponse } from '../interfaces/product/product';
-import { NotFound } from 'http-errors';
+import { NotFound, BadRequest } from 'http-errors';
 import { IUserResponse } from '../interfaces/auth/user';
-import { Prisma, Product } from '@prisma/client';
+import { buildReponseProduct } from './utils/buildResponses';
+import { selectProducts } from './utils/selects';
 
 export class ProductService {
-    static async getAll(search: string, currentPage: number, size: number): Promise<IProductResponse[]> {
-        const products = await prisma.product.findMany({
-            take: size,
-            skip: (currentPage - 1) * size,
-            select: {
-                id: true,
-                name: true,
-                description: true,
-                price: true,
-                stock: true,
+    static async getAll(search: string, currentPage: string, size: string) {
+        // add search filter
+        let categoryFilter = {};
+        if (search) {
+            categoryFilter = {
                 Category: {
-                    select: {
-                        name: true,
+                    name: {
+                        contains: search,
                     },
                 },
-            },
-        });
-
-        return products.map((product) => {
-            return {
-                id: product.id,
-                name: product.name,
-                description: product.description,
-                price: product.price,
-                stock: product.stock,
-                category: product.Category.name,
             };
-        });
+        }
+
+        // paginate data and filters
+        try {
+            const products = await prisma.product.findMany({
+                where: {
+                    is_active: true,
+                    ...categoryFilter,
+                },
+                take: parseInt(size),
+                skip: (parseInt(currentPage) - 1) * parseInt(size),
+                ...selectProducts,
+            });
+
+            return products.map((product) => {
+                return buildReponseProduct(product);
+            });
+        } catch {
+            throw new BadRequest('Invalid query params');
+        }
     }
 
     static async getOne(id: string): Promise<IProductResponse> {

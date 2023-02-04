@@ -26,3 +26,18 @@ export const productIdSchema = {
     type: 'integer',
     minimum: 1,
 };
+
+export const searchProductSchema: AllowedSchema = {
+    type: 'object',
+    properties: {
+        search: {
+            type: 'string',
+        },
+        page: {
+            type: 'string',
+        },
+        limit: {
+            type: 'string',
+        },
+    },
+};
