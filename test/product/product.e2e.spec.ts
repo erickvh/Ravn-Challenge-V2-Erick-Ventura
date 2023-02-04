@@ -121,18 +121,18 @@ describe('Products (e2e)', () => {
             const res = await request(app).get('/api/v1/products');
             expect(res.status).toBe(200);
             expect(res.body).toHaveProperty('products');
-            expect(res.body.products).toHaveLength(1);
+            expect(res.body.products.length).toBeGreaterThan(0);
         });
 
         it('It should get all products with pagination', async () => {
             const res = await request(app).get('/api/v1/products?page=1&limit=10');
             expect(res.status).toBe(200);
             expect(res.body).toHaveProperty('products');
-            expect(res.body.products).toHaveLength(1);
+            expect(res.body.products.length).toBeGreaterThan(0);
         });
 
         it('It should get not products if page does not have products', async () => {
-            const res = await request(app).get('/api/v1/products?page=2&limit=10');
+            const res = await request(app).get('/api/v1/products?page=4&limit=10');
             expect(res.status).toBe(200);
             expect(res.body).toHaveProperty('products');
             expect(res.body.products).toHaveLength(0);

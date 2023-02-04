@@ -1,4 +1,3 @@
-import { faker } from '@faker-js/faker';
 import request from 'supertest';
 import { appBuilder } from '../../src/app';
 import { prisma, cleanDB } from '../../src/database/prisma';
