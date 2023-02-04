@@ -7,6 +7,9 @@ export const cleanDB = async () => {
 
     try {
         await prisma.user.deleteMany();
+        await prisma.product.deleteMany();
+        await prisma.category.deleteMany();
+        await prisma.images.deleteMany();
     } catch (err) {
         console.error(err);
     } finally {
