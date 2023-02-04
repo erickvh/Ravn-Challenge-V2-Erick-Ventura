@@ -1,7 +1,6 @@
 import { prisma } from '../database/prisma';
 import { IProductRequest, IProductResponse } from '../interfaces/product/product';
 import { NotFound, BadRequest } from 'http-errors';
-import { IUserResponse } from '../interfaces/auth/user';
 import { buildReponseProduct } from './utils/buildResponses';
 import { selectProducts } from './utils/selects';
 
