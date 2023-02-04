@@ -6,7 +6,7 @@ import { buildReponseProduct } from './utils/buildResponses';
 import { selectProducts } from './utils/selects';
 
 export class ProductService {
-    static async getAll(search: string, currentPage: string, size: string) {
+    static async getAll(search: string, currentPage: string, size: string): Promise<IProductResponse[]> {
         // add search filter
         let categoryFilter = {};
         if (search) {
@@ -45,30 +45,12 @@ export class ProductService {
                 id: parseInt(id),
                 is_active: true,
             },
-            select: {
-                id: true,
-                name: true,
-                description: true,
-                price: true,
-                stock: true,
-                Category: {
-                    select: {
-                        name: true,
-                    },
-                },
-            },
+            ...selectProducts,
         });
 
         if (!product) throw new NotFound('Product not found');
 
-        return {
-            id: product.id,
-            name: product.name,
-            description: product.description,
-            price: product.price,
-            stock: product.stock,
-            category: product.Category.name,
-        };
+        return buildReponseProduct(product);
     }
 
     static async create(product: IProductRequest): Promise<IProductResponse> {
@@ -89,27 +71,9 @@ export class ProductService {
                     },
                 },
             },
-            select: {
-                id: true,
-                name: true,
-                description: true,
-                price: true,
-                stock: true,
-                Category: {
-                    select: {
-                        name: true,
-                    },
-                },
-            },
+            ...selectProducts,
         });
-        return {
-            id: productCreated.id,
-            name: productCreated.name,
-            description: productCreated.description,
-            price: productCreated.price,
-            stock: productCreated.stock,
-            category: productCreated.Category.name,
-        };
+        return buildReponseProduct(productCreated);
     }
 
     static async update(id: string, product: IProductRequest): Promise<IProductResponse> {
@@ -134,28 +98,10 @@ export class ProductService {
                 where: {
                     id: parseInt(id),
                 },
-                select: {
-                    id: true,
-                    name: true,
-                    description: true,
-                    price: true,
-                    stock: true,
-                    Category: {
-                        select: {
-                            name: true,
-                        },
-                    },
-                },
+                ...selectProducts,
             });
 
-            return {
-                id: productUpdated.id,
-                price: productUpdated.price,
-                name: productUpdated.name,
-                description: productUpdated.description,
-                stock: productUpdated.stock,
-                category: productUpdated.Category.name,
-            };
+            return buildReponseProduct(productUpdated);
         } catch {
             throw new NotFound('Product not found');
         }
@@ -167,28 +113,10 @@ export class ProductService {
                 where: {
                     id: parseInt(id),
                 },
-                select: {
-                    id: true,
-                    name: true,
-                    description: true,
-                    price: true,
-                    stock: true,
-                    Category: {
-                        select: {
-                            name: true,
-                        },
-                    },
-                },
+                ...selectProducts,
             });
 
-            return {
-                id: removedUser.id,
-                name: removedUser.name,
-                description: removedUser.description,
-                price: removedUser.price,
-                stock: removedUser.stock,
-                category: removedUser.Category.name,
-            };
+            return buildReponseProduct(removedUser);
         } catch {
             throw new NotFound('Product not found');
         }
@@ -211,27 +139,9 @@ export class ProductService {
             data: {
                 is_active: false,
             },
-            select: {
-                id: true,
-                name: true,
-                description: true,
-                price: true,
-                stock: true,
-                Category: {
-                    select: {
-                        name: true,
-                    },
-                },
-            },
+            ...selectProducts,
         });
 
-        return {
-            id: productUpdated.id,
-            name: productUpdated.name,
-            description: productUpdated.description,
-            price: productUpdated.price,
-            stock: productUpdated.stock,
-            category: productUpdated.Category.name,
-        };
+        return buildReponseProduct(productUpdated);
     }
 }

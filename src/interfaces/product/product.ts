@@ -16,4 +16,5 @@ export interface IProductResponse {
     price: Decimal | number;
     category: string;
     stock: number;
+    images: string[];
 }
