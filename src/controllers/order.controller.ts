@@ -7,8 +7,11 @@ export class OrderController {
         const user = req.user as IUserResponse;
         const { address } = req.body;
 
-        const cart = await OrderService.checkoutOrder(user.id as number, address);
+        const order = await OrderService.checkoutOrder(user.id as number, address);
 
-        return res.json(cart);
+        return res.json({
+            message: 'Order placed successfully',
+            order: order,
+        });
     }
 }

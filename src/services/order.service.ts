@@ -3,6 +3,7 @@ import { selectCarts, selectOrders } from './utils/selects';
 import { NotFound } from 'http-errors';
 import { CartItems } from '../interfaces/order/cart.types';
 import { Order, Cart } from '@prisma/client';
+import { buildReponseOrder } from './utils/buildResponses';
 
 export class OrderService {
     static async getDraftCart(userId: number) {
@@ -98,6 +99,6 @@ export class OrderService {
         await this.updateStockProducts(cart.CartItems as CartItems[]);
         const orderCreated = await this.getOrderById(orderHeader.id);
         await this.undraftCart(cart.id as number);
-        return orderCreated;
+        return buildReponseOrder(orderCreated);
     }
 }
