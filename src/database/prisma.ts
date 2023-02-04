@@ -8,7 +8,6 @@ export const cleanDB = async () => {
     try {
         await prisma.user.deleteMany();
     } catch (err) {
-        // eslint-disable-next-line no-console
         console.error(err);
     } finally {
         await prisma.$disconnect();
