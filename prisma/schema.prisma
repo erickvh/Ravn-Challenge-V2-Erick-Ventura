@@ -20,6 +20,7 @@ model User {
   role      Role     @relation(fields: [roleId], references: [id])
   roleId    Int
   Like      Like[]
+  Cart      Cart[]
 
   @@map("users")
 }
@@ -35,18 +36,19 @@ model Role {
 }
 
 model Product {
-  id          Int      @id @default(autoincrement())
+  id          Int         @id @default(autoincrement())
   name        String
   description String
-  price       Decimal  @db.Decimal(10, 2)
-  is_active   Boolean  @default(true)
-  stock       Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  Category    Category @relation(fields: [categoryId], references: [id])
+  price       Decimal     @db.Decimal(10, 2)
+  is_active   Boolean     @default(true)
+  stock       Int         @default(0)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  Category    Category    @relation(fields: [categoryId], references: [id])
   categoryId  Int
   Images      Images[]
   Like        Like[]
+  CartItems   CartItems[]
 
   @@map("products")
 }
@@ -83,4 +85,30 @@ model Like {
 
   @@unique([userId, productId])
   @@map("likes")
+}
+
+model Cart {
+  id        Int         @id @default(autoincrement())
+  createdAt DateTime    @default(now())
+  isDraft   Boolean     @default(true)
+  updatedAt DateTime    @updatedAt
+  User      User        @relation(fields: [userId], references: [id])
+  userId    Int
+  CartItems CartItems[]
+
+  @@map("carts")
+}
+
+model CartItems {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Cart      Cart     @relation(fields: [cartId], references: [id])
+  cartId    Int
+  Product   Product  @relation(fields: [productId], references: [id])
+  productId Int
+  quantity  Int      @default(1)
+
+  @@unique([cartId, productId])
+  @@map("cart_items")
 }
