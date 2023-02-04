@@ -8,13 +8,13 @@ export async function userSeed(prisma: PrismaClient): Promise<User[]> {
 
     const users = [
         {
-            email: 'admin@bookify.com',
+            email: 'admin@store.com',
             password: adminPassword,
             name: 'Jane doe',
             role: 'manager',
         },
         {
-            email: 'manager@bookify.com',
+            email: 'manager@store.com',
             password: adminPassword,
             name: 'Jonh Doe',
             role: 'manager',

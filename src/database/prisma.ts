@@ -1,15 +1,11 @@
-import { PrismaClient, Prisma } from '@prisma/client';
-
+import { PrismaClient } from '@prisma/client';
+import { clearSchema } from '../../prisma/util';
 export const prisma = new PrismaClient();
 
 export const cleanDB = async () => {
     const prisma = new PrismaClient();
-
+    await clearSchema();
     try {
-        await prisma.user.deleteMany();
-        await prisma.product.deleteMany();
-        await prisma.category.deleteMany();
-        await prisma.images.deleteMany();
     } catch (err) {
         console.error(err);
     } finally {
