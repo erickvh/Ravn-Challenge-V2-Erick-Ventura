@@ -14,4 +14,24 @@ export class OrderController {
             order: order,
         });
     }
+
+    static async getMyOrders(req: Request, res: Response) {
+        const user = req.user as IUserResponse;
+
+        const orders = await OrderService.getMyOrders(user.id as number);
+
+        return res.json({
+            orders: orders,
+        });
+    }
+
+    static async getOrdersByUserId(req: Request, res: Response) {
+        const { id } = req.params;
+
+        const orders = await OrderService.getOrdersByUserId(id);
+
+        return res.json({
+            orders: orders,
+        });
+    }
 }

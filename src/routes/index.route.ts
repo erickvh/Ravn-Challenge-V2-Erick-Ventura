@@ -11,6 +11,6 @@ export function indexRoutes(app: Router): Router {
     app.use('/api/v1/products', productRoutes());
     app.use('/api/v1/feed', feedRoutes());
     app.use('/api/v1/cart', cartRoutes());
-    app.use('/api/v1/order', checkoutOrderRoutes());
+    app.use('/api/v1/orders', checkoutOrderRoutes());
     return router;
 }

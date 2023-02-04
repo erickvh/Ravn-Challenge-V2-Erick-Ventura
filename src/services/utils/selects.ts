@@ -46,6 +46,7 @@ export const selectOrders = {
         address: true,
         createdAt: true,
         updatedAt: true,
+        status: true,
         OrderItem: {
             select: {
                 id: true,

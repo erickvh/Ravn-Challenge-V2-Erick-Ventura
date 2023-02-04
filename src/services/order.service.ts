@@ -101,4 +101,26 @@ export class OrderService {
         await this.undraftCart(cart.id as number);
         return buildReponseOrder(orderCreated);
     }
+
+    static async getMyOrders(userId: number) {
+        const orders = await prisma.order.findMany({
+            where: {
+                userId: userId,
+            },
+            ...selectOrders,
+        });
+
+        return orders.map((order) => buildReponseOrder(order));
+    }
+
+    static async getOrdersByUserId(userId: string) {
+        const orders = await prisma.order.findMany({
+            where: {
+                userId: parseInt(userId),
+            },
+            ...selectOrders,
+        });
+
+        return orders.map((order) => buildReponseOrder(order));
+    }
 }

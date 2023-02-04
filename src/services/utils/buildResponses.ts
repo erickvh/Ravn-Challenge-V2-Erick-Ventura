@@ -14,6 +14,7 @@ export const buildReponseOrder = (order: any) => {
     return {
         orderId: order.id,
         address: order.address,
+        status: order.status,
         user: {
             id: order.User.id,
             name: order.User.name,
