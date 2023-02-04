@@ -6,8 +6,8 @@ export class FeedController {
     static async like(req: Request, res: Response) {
         const user = req.user as IUserResponse;
 
-        const like = await feedService.like(user.id as number, req.body.productId);
+        await feedService.like(user.id as number, req.body.productId);
 
-        res.status(200).json({ message: 'like' });
+        res.status(200).json({ message: 'Product liked' });
     }
 }
