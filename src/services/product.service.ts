@@ -54,6 +54,8 @@ export class ProductService {
     }
 
     static async create(product: IProductRequest): Promise<IProductResponse> {
+        if (!product.category) throw new BadRequest('Category is required');
+
         const productCreated = await prisma.product.create({
             data: {
                 name: product.name,

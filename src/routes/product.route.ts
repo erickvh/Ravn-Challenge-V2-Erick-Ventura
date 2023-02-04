@@ -11,7 +11,7 @@ export function productRoutes(): Router {
     router.get('/', validate({ query: searchProductSchema }), ProductController.index);
 
     router.post(
-        '/create',
+        '/',
         passport.authenticate('jwt', { session: false }),
         validateAdmin,
         validate({ body: productSchema }),

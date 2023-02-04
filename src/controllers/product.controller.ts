@@ -4,7 +4,7 @@ import { IProductRequest } from '../interfaces/product/product';
 
 export class ProductController {
     static async index(req: Request, res: Response) {
-        let { q, page, limit } = req.query;
+        let { q, page = '1', limit = '10' } = req.query;
 
         const products = await ProductService.getAll(q as string, page as string, limit as string);
 
@@ -19,7 +19,7 @@ export class ProductController {
 
     static async create(req: Request, res: Response) {
         const product = await ProductService.create(req.body as IProductRequest);
-        res.status(200).json({ product: product, message: 'Product created' });
+        res.status(201).json({ product: product, message: 'Product created' });
     }
 
     static async update(req: Request, res: Response) {
@@ -31,7 +31,7 @@ export class ProductController {
     static async delete(req: Request, res: Response) {
         const removedProduct = await ProductService.delete(req.params.id);
 
-        return res.status(200).json({ product: removedProduct, message: 'Product removed' });
+        return res.status(200).json({ product: removedProduct, message: 'Product deleted' });
     }
 
     static async disable(req: Request, res: Response) {

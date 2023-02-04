@@ -13,8 +13,5 @@ export const errorHandler = (err: Error, req: Request, res: Response, next: Next
         return res.status(err.statusCode).json({ message: err.message });
     }
 
-    if (err instanceof SyntaxError) {
-        return res.status(500).json({ message: 'Internal server Error' });
-    }
-    next(err);
+    return res.status(500).json({ message: 'Internal error' });
 };
