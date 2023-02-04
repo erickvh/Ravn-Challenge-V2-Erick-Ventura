@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { PrismaClient, Product } from '@prisma/client';
 
-export async function productSeed(prisma: PrismaClient) {
+export async function productSeed(prisma: PrismaClient): Promise<PromiseSettledResult<Product>[]> {
     console.log('running seeders for products 🌱');
     let products = new Array(30);
 
