@@ -120,7 +120,6 @@ export class OrderService {
             },
             ...selectOrders,
         });
-
         return orders.map((order) => buildReponseOrder(order));
     }
 }
