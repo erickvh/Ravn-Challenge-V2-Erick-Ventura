@@ -52,17 +52,8 @@ describe('Auth (e2e)', () => {
         });
 
         it("It shouldn't login not valid password", async () => {
-            const fakerUser = {
-                email: faker.name.fullName(),
-                password: faker.internet.password(),
-                name: faker.name.fullName(),
-            };
-
-            await userFactory.makeUsingData(fakerUser);
-
-            const res = await request(app)
-                .post('/api/v1/login')
-                .send({ ...fakerUser, password: 'test' });
+            const fakerUser = await userFactory.make();
+            const res = await request(app).post('/api/v1/login').send({ email: fakerUser.email, password: 'test' });
 
             expect(res.status).toBe(401);
             expect(res.body.message).toBe('Invalid password');
@@ -106,17 +97,11 @@ describe('Auth (e2e)', () => {
         });
 
         it("It shouldn't signup with existing user", async () => {
-            const fakerUser = {
-                email: faker.name.fullName(),
-                password: faker.internet.password(),
-                name: faker.name.fullName(),
-            };
-
-            await userFactory.makeUsingData(fakerUser);
+            const fakeUser = await userFactory.make();
 
             const res = await request(app)
                 .post('/api/v1/signup')
-                .send({ ...fakerUser });
+                .send({ email: fakeUser.email, password: faker.internet.password(), name: faker.name.fullName() });
 
             expect(res.status).toBe(422);
             expect(res.body.message).toBe('User already exists');
