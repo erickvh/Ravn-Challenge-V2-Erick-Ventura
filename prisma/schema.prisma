@@ -19,6 +19,7 @@ model User {
   updatedAt DateTime @updatedAt
   role      Role     @relation(fields: [roleId], references: [id])
   roleId    Int
+  Like      Like[]
 
   @@map("users")
 }
@@ -45,6 +46,7 @@ model Product {
   Category    Category @relation(fields: [categoryId], references: [id])
   categoryId  Int
   Images      Images[]
+  Like        Like[]
 
   @@map("products")
 }
@@ -68,4 +70,17 @@ model Images {
   productId Int?
 
   @@map("images")
+}
+
+model Like {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  User      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  Product   Product  @relation(fields: [productId], references: [id])
+  productId Int
+
+  @@unique([userId, productId])
+  @@map("likes")
 }
