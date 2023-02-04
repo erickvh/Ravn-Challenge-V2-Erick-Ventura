@@ -2,32 +2,33 @@ import { PrismaClient, User } from '@prisma/client';
 import { hash } from 'bcryptjs';
 
 export async function userSeed(prisma: PrismaClient): Promise<User[]> {
+    console.log('running seeders for users 🌱');
     const adminPassword = await hash('admin', 10);
     const clientPassword = await hash('secret123', 10);
 
     const users = [
         {
-            email: 'admin@booky.com',
+            email: 'admin@store.com',
             password: adminPassword,
             name: 'Jane doe',
             role: 'manager',
         },
         {
-            email: 'manager@booky.com',
+            email: 'manager@store.com',
             password: adminPassword,
             name: 'Jonh Doe',
             role: 'manager',
         },
         {
-            email: 'customer@test.com',
+            email: 'customer.bar@test.com',
             password: clientPassword,
-            name: 'Erick Ventura',
+            name: 'Customer Bar',
             role: 'client',
         },
         {
-            email: 'customer2@test.com',
+            email: 'customer.foo@test.com',
             password: clientPassword,
-            name: 'Antonio Hurtado',
+            name: 'Customer Foo',
             role: 'client',
         },
     ];

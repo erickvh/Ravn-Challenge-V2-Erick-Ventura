@@ -1,14 +1,12 @@
-import { PrismaClient, Prisma } from '@prisma/client';
-
+import { PrismaClient } from '@prisma/client';
+import { clearSchema } from '../../prisma/util';
 export const prisma = new PrismaClient();
 
 export const cleanDB = async () => {
     const prisma = new PrismaClient();
-
+    await clearSchema();
     try {
-        await prisma.user.deleteMany();
     } catch (err) {
-        // eslint-disable-next-line no-console
         console.error(err);
     } finally {
         await prisma.$disconnect();

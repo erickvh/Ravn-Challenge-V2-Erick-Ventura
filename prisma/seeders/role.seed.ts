@@ -1,6 +1,7 @@
 import { PrismaClient, Role } from '@prisma/client';
 
 export async function roleSeed(prisma: PrismaClient): Promise<Role[]> {
+    console.log('running seeders for roles 🌱');
     const roles = ['client', 'manager'];
 
     return Promise.all(

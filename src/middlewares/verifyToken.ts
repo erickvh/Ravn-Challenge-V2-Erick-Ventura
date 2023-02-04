@@ -16,6 +16,12 @@ export const verifyToken = new Strategy(opts, async (req: Request, payload: IUse
         where: {
             email: payload.email,
         },
+        select: {
+            id: true,
+            email: true,
+            name: true,
+            role: true,
+        },
     });
 
     if (!user) return done(null, false);
