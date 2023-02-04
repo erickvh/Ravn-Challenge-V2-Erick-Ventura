@@ -41,4 +41,11 @@ export class ProductController {
 
         return res.status(200).json({ message: 'Product disabled' });
     }
+
+    static async uploadImage(req: Request, res: Response) {
+        const { url } = req.body;
+        const product = await ProductService.uploadImage(req.params.id, url);
+
+        return res.status(200).json({ product: product, message: 'Image uploaded' });
+    }
 }

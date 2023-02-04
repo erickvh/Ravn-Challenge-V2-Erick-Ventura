@@ -144,4 +144,37 @@ export class ProductService {
 
         return buildReponseProduct(productUpdated);
     }
+
+    static async uploadImage(id: string, image: string) {
+        const product = await prisma.product.findFirst({
+            where: {
+                id: parseInt(id),
+                is_active: true,
+            },
+        });
+
+        if (!product) throw new NotFound('Product not found');
+
+        const imageUpdated = await prisma.images.create({
+            data: {
+                url: image,
+            },
+        });
+
+        const productUpdated = await prisma.product.update({
+            where: {
+                id: parseInt(id),
+            },
+            data: {
+                Images: {
+                    connect: {
+                        id: imageUpdated.id,
+                    },
+                },
+            },
+            ...selectProducts,
+        });
+
+        return buildReponseProduct(productUpdated);
+    }
 }

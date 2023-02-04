@@ -41,3 +41,13 @@ export const searchProductSchema: AllowedSchema = {
         },
     },
 };
+
+export const uploadImageSchema: AllowedSchema = {
+    type: 'object',
+    required: ['url'],
+    properties: {
+        url: {
+            type: 'string',
+        },
+    },
+};
