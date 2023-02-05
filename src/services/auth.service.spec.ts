@@ -1,9 +1,9 @@
 import { cleanDB, prisma } from '../database/prisma';
 import { UserFactory } from '../factories/user.factory';
 import { faker } from '@faker-js/faker';
-import { hash } from 'bcryptjs';
 import { AuthService } from './auth.service';
 import { IUserRequest } from '../interfaces/auth/user';
+
 describe('AuthService', () => {
     let userFactory: UserFactory;
 
@@ -106,6 +106,49 @@ describe('AuthService', () => {
 
         it("should'nt be able to logout with invalid token", async () => {
             await expect(AuthService.logOut('')).rejects.toThrowError('Token not found');
+        });
+    });
+
+    describe('forgotPassword', () => {
+        beforeAll(async () => {});
+
+        it('should be able to forgot password', async () => {
+            const user = await userFactory.make();
+            const resetToken = await AuthService.forgotPassword({ email: user.email } as IUserRequest);
+            expect(resetToken).toBeDefined();
+            expect(typeof resetToken).toEqual('string');
+        });
+
+        it("should'nt be able to forgot password with invalid email", async () => {
+            await expect(AuthService.forgotPassword({ email: 'email-invalid' } as IUserRequest)).rejects.toThrowError(
+                'User not found',
+            );
+        });
+    });
+
+    describe('resetPassword', () => {
+        it('should be able to reset password', async () => {
+            const user = await userFactory.make();
+            const resetToken = await AuthService.forgotPassword({ email: user.email } as IUserRequest);
+            const newPassword = faker.internet.password();
+            const userReseted = await AuthService.resetPassword(resetToken, {
+                email: user.email,
+                password: newPassword,
+            } as IUserRequest);
+
+            expect(userReseted).toBeDefined();
+            expect(userReseted).toHaveProperty('email');
+            expect(userReseted).toHaveProperty('name');
+        });
+
+        it("should'nt be able to reset password with invalid token", async () => {
+            const newPassword = faker.internet.password();
+            await expect(
+                AuthService.resetPassword('token-invalid', {
+                    email: 'email-invalid',
+                    password: newPassword,
+                } as IUserRequest),
+            ).rejects.toThrowError('Token not found');
         });
     });
 });
