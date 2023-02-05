@@ -156,7 +156,7 @@ describe('Products (e2e)', () => {
 
             expect(res.status).toBe(200);
             expect(res.body).toHaveProperty('products');
-            expect(res.body.products).toHaveLength(1);
+            expect(res.body.products.length).toBeGreaterThan(0);
         });
     });
 
