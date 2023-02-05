@@ -14,6 +14,6 @@ export function authRoutes(): Router {
     router.post('/signup', validate({ body: signupSchema }), AuthController.singUp);
     router.post('/logout', passport.authenticate('jwt', { session: false }), AuthController.logOut);
     router.post('/forgotPassword', validate({ body: forgotSchema }), AuthController.forgotPassword);
-    router.post('/resetPassword/:resetToken', validate({ body: resetSchema }), AuthController.resetPassword);
+    router.put('/resetPassword/:resetToken', validate({ body: resetSchema }), AuthController.resetPassword);
     return router;
 }

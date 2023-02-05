@@ -26,7 +26,7 @@ export class AuthController {
 
     static async resetPassword(req: Request, res: Response) {
         const userFound = await AuthService.resetPassword(req.params.resetToken, req.body);
-        sendEmail(
+        await sendEmail(
             userFound.email,
             'Password reset',
             `Hi ${userFound.name}, Your password has been reset, login with your new password`,
