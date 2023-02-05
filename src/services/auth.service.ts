@@ -118,7 +118,7 @@ export class AuthService {
             },
         });
 
-        if (!userFound) throw new Unauthorized('User not found');
+        if (!userFound) throw new Unauthorized('Token not found');
 
         const password = await hash(user.password, 10);
 
