@@ -1,5 +1,4 @@
 import { prisma } from '../database/prisma';
-import { FeedFactory } from '../factories/feed.factory';
 import { ProductFactory } from '../factories/product.factory';
 import { UserFactory } from '../factories/user.factory';
 import { CartService } from './cart.service';

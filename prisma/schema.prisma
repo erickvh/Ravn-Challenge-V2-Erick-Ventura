@@ -21,6 +21,7 @@ model User {
   roleId    Int
   Like      Like[]
   Cart      Cart[]
+  Order     Order[]
 
   @@map("users")
 }
@@ -49,6 +50,7 @@ model Product {
   Images      Images[]
   Like        Like[]
   CartItems   CartItems[]
+  OrderItem   OrderItem[]
 
   @@map("products")
 }
@@ -111,4 +113,37 @@ model CartItems {
 
   @@unique([cartId, productId])
   @@map("cart_items")
+}
+
+model Order {
+  id        Int         @id @default(autoincrement())
+  address   String
+  status    Status      @default(processed)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  User      User        @relation(fields: [userId], references: [id])
+  userId    Int
+  OrderItem OrderItem[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Order     Order    @relation(fields: [orderId], references: [id])
+  orderId   Int
+  Product   Product  @relation(fields: [productId], references: [id])
+  productId Int
+  quantity  Int
+  price     Decimal  @db.Decimal(10, 2)
+
+  @@unique([orderId, productId])
+  @@map("order_items")
+}
+
+enum Status {
+  processed
+  delivered
 }
