@@ -1,16 +1,13 @@
 import { prisma } from '../database/prisma';
-import { FeedFactory } from '../factories/feed.factory';
 import { ProductFactory } from '../factories/product.factory';
 import { UserFactory } from '../factories/user.factory';
 import { feedService } from './feed.service';
 
 describe('FeedService', () => {
-    let feedFactory: FeedFactory;
     let userFactory: UserFactory;
     let productFactory: ProductFactory;
 
     beforeAll(() => {
-        feedFactory = new FeedFactory(prisma);
         userFactory = new UserFactory(prisma);
         productFactory = new ProductFactory(prisma);
     });

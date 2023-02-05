@@ -3,7 +3,9 @@ import { ProductFactory } from '../factories/product.factory';
 import { UserFactory } from '../factories/user.factory';
 import { OrderService } from './order.service';
 import { CartService } from './cart.service';
-import { Cart } from '@prisma/client';
+
+jest.mock('../../src/services/utils/mailer');
+jest.mock('../../src/jobs/queues/email.queue');
 
 describe('OrderService', () => {
     let userFactory: UserFactory;
@@ -137,6 +139,30 @@ describe('OrderService', () => {
 
             expect(result).toBeDefined();
             expect(result.length).toEqual(0);
+        });
+    });
+
+    describe('outOfStockNotifier', () => {
+        it('should resolved out stock notifier', async () => {
+            const user = await userFactory.make();
+            const product = await productFactory.makeUsingData({
+                stock: 3,
+                category: 'test',
+                description: 'test',
+                name: 'test',
+                price: 3,
+            });
+
+            // Update the product stock to 4
+            await prisma.like.create({
+                data: {
+                    productId: product.id,
+                    userId: user.id,
+                },
+            });
+
+            // resolves
+            await expect(OrderService.outOfStockNotifier(product)).resolves.not.toThrow();
         });
     });
 });

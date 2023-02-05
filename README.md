@@ -119,3 +119,11 @@ https://documenter.getpostman.com/view/9154195/2s935oL4JT
 ## Deployment
 
 Solution deployed in Digital Ocean: http://137.184.1.34 or http://erickventura.tech
+
+## Testing results
+
+Here a brief summary of the testing results:
+
+| File      | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s |
+| --------- | ------- | -------- | ------- | ------- | ----------------- |
+| All files | 95.41   | 75       | 92.59   | 96.47   |                   |

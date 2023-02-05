@@ -35,9 +35,7 @@ export class ProductController {
     }
 
     static async disable(req: Request, res: Response) {
-        const isRemoved = await ProductService.disable(req.params.id);
-
-        if (!isRemoved) return res.status(404).json({ message: 'Product not found' });
+        await ProductService.disable(req.params.id);
 
         return res.status(200).json({ message: 'Product disabled' });
     }
