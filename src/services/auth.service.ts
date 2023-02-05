@@ -5,6 +5,8 @@ import { UnprocessableEntity, Unauthorized } from 'http-errors';
 import config from '../config/config';
 import { sign } from 'jsonwebtoken';
 import { getRedisClient } from '../database/redis';
+import crypto from 'crypto';
+import { User } from '.prisma/client';
 export class AuthService {
     static async singUp(user: IUserRequest): Promise<IUserResponse> {
         try {
@@ -31,7 +33,7 @@ export class AuthService {
         }
     }
 
-    static async logIn(user: IUserRequest) {
+    static async logIn(user: IUserRequest): Promise<string> {
         const userFound = await prisma.user.findUnique({
             where: {
                 email: user.email,
@@ -67,12 +69,69 @@ export class AuthService {
         return token;
     }
 
-    static async logOut(token: string | undefined) {
+    static async logOut(token: string | undefined): Promise<boolean> {
         if (!token) throw Unauthorized('Token not found');
         const clientRedis = await getRedisClient();
         const tokenKey = `bl_${token}`;
         await clientRedis.set(tokenKey, token);
 
         return true;
+    }
+
+    static async forgotPassword(user: IUserRequest): Promise<string> {
+        const userFound = await prisma.user.findUnique({
+            where: {
+                email: user.email,
+            },
+            select: {
+                name: true,
+                email: true,
+                password: true,
+            },
+        });
+
+        if (!userFound) throw new Unauthorized('User not found');
+
+        const resetToken = crypto.randomBytes(32).toString('hex');
+        const passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+
+        await prisma.user.update({
+            where: {
+                email: user.email,
+            },
+            data: {
+                passwordResetToken,
+            },
+        });
+
+        return passwordResetToken;
+    }
+
+    static async resetPassword(resetToken: string, user: IUserRequest): Promise<User> {
+        const userFound = await prisma.user.findFirst({
+            where: {
+                passwordResetToken: resetToken,
+            },
+            select: {
+                name: true,
+                email: true,
+            },
+        });
+
+        if (!userFound) throw new Unauthorized('User not found');
+
+        const password = await hash(user.password, 10);
+
+        await prisma.user.update({
+            where: {
+                email: userFound.email,
+            },
+            data: {
+                password: password,
+                passwordResetToken: null,
+            },
+        });
+
+        return userFound as User;
     }
 }
