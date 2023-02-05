@@ -2,8 +2,9 @@ import { prisma } from '../database/prisma';
 import { selectCarts, selectOrders } from './utils/selects';
 import { NotFound } from 'http-errors';
 import { CartItems } from '../interfaces/order/cart.types';
-import { Order, Cart } from '@prisma/client';
+import { Order, Cart, Product } from '@prisma/client';
 import { buildReponseOrder } from './utils/buildResponses';
+import { addEmailToQueue } from '../jobs/queues/email.queue';
 
 export class OrderService {
     static async getDraftCart(userId: number) {
@@ -53,9 +54,49 @@ export class OrderService {
         return orderItems;
     }
 
+    static async outOfStockNotifier(product: Product): Promise<void> {
+        if (product.stock > 3 || product.stock === 0) return;
+
+        const userLike = await prisma.like.findFirst({
+            where: {
+                productId: product.id,
+            },
+            include: {
+                User: true,
+                Product: {
+                    include: {
+                        Images: true,
+                    },
+                },
+            },
+        });
+
+        if (userLike) {
+            const { User, Product } = userLike;
+            const email = User.email;
+            const image = Product.Images[0].url;
+
+            const subject = 'A product you like is almost out of stock 👀';
+
+            const message = `
+                <h3>Hi ${User.name},</h3>
+                <p>Product <strong>${Product.name}</strong> is almost out of stock.
+                    You can buy it now before it's too late.
+                </p>
+                <p>Only ${product.stock} left.</p>
+                <p>
+                    <img src="${image}" alt="${Product.name}" style="width: 100px; height: 100px; object-fit: cover;"/>
+                </p>
+
+                `;
+
+            addEmailToQueue(email, subject, message);
+        }
+    }
+
     static async updateStockProducts(cartItems: CartItems[]) {
-        cartItems.forEach(async (item) => {
-            await prisma.product.update({
+        for (const item of cartItems) {
+            const productUpdated = await prisma.product.update({
                 where: {
                     id: item.Product.id,
                 },
@@ -63,7 +104,9 @@ export class OrderService {
                     stock: item.Product.stock - item.quantity,
                 },
             });
-        });
+
+            await this.outOfStockNotifier(productUpdated);
+        }
     }
 
     static async undraftCart(cartId: number) {

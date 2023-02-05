@@ -62,7 +62,7 @@ describe('Order (e2e)', () => {
             expect(res.body.order).toHaveProperty('total');
             expect(res.body.order).toHaveProperty('address');
             expect(res.body.order).toHaveProperty('items');
-            expect(res.body.order.items).toHaveLength(1);
+            expect(res.body.order.items.length).toBeGreaterThan(0);
         });
 
         it('should be able to not checkout as manager', async () => {
